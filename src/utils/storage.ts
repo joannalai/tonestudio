@@ -2,6 +2,8 @@ import { InputData, Template } from '../types';
 
 const DRAFT_KEY = 'tone-studio-draft';
 const TEMPLATES_KEY = 'tone-studio-templates';
+const TEMPLATES_VERSION_KEY = 'tone-studio-templates-version';
+const CURRENT_TEMPLATES_VERSION = '2'; // 版本号，更新默认模板时递增
 
 export function saveDraft(data: Partial<InputData>): void {
     try {
@@ -251,18 +253,23 @@ function getDefaultTemplates(): Template[] {
 
 export function loadTemplates(): Template[] {
     try {
+        const savedVersion = localStorage.getItem(TEMPLATES_VERSION_KEY);
         const data = localStorage.getItem(TEMPLATES_KEY);
-        if (!data) {
-            // 如果没有任何模板，初始化默认模板
+        
+        // 如果没有数据，或者版本不匹配，或者模板为空，初始化默认模板
+        if (!data || savedVersion !== CURRENT_TEMPLATES_VERSION) {
             const defaultTemplates = getDefaultTemplates();
             localStorage.setItem(TEMPLATES_KEY, JSON.stringify(defaultTemplates));
+            localStorage.setItem(TEMPLATES_VERSION_KEY, CURRENT_TEMPLATES_VERSION);
             return defaultTemplates;
         }
+        
         const templates = JSON.parse(data);
         // 如果模板数组为空，也初始化默认模板
         if (Array.isArray(templates) && templates.length === 0) {
             const defaultTemplates = getDefaultTemplates();
             localStorage.setItem(TEMPLATES_KEY, JSON.stringify(defaultTemplates));
+            localStorage.setItem(TEMPLATES_VERSION_KEY, CURRENT_TEMPLATES_VERSION);
             return defaultTemplates;
         }
         return templates;
@@ -272,6 +279,7 @@ export function loadTemplates(): Template[] {
         const defaultTemplates = getDefaultTemplates();
         try {
             localStorage.setItem(TEMPLATES_KEY, JSON.stringify(defaultTemplates));
+            localStorage.setItem(TEMPLATES_VERSION_KEY, CURRENT_TEMPLATES_VERSION);
         } catch (e) {
             // 如果 localStorage 不可用，至少返回默认模板
         }
