@@ -1,4 +1,3 @@
-import React from 'react';
 import { GeneratedVersions } from '../types';
 
 interface OutputAreaProps {

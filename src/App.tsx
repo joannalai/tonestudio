@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { InputData, GeneratedVersions, Template } from './types';
 import { generateVersions } from './utils/generator';
 import {

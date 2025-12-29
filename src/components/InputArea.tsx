@@ -1,4 +1,3 @@
-import React from 'react';
 import { InputData, Scene, Relationship, Intent, Language } from '../types';
 
 interface InputAreaProps {
